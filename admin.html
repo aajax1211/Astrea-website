@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Astrea eDiscovery</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --pink: #F9B8C8;
+      --dark: #1a1a1a;
+      --sidebar: #111111;
+      --sidebar-w: 240px;
+      --accent: #F9B8C8;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: #f5f5f5; color: var(--dark); }
+
+    /* ── LOGIN ─────────────────────────────── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--pink);
+    }
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    .login-logo {
+      width: 72px; height: 72px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin: 0 auto 1.25rem;
+      display: block;
+    }
+    .login-card h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .login-card p { font-size: 0.85rem; color: rgba(0,0,0,0.4); margin-bottom: 2rem; }
+    .login-input {
+      width: 100%;
+      border: 2px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .login-input:focus { border-color: var(--dark); }
+    .login-btn {
+      width: 100%;
+      background: var(--dark);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: #333; }
+    .login-error { color: #e53e3e; font-size: 0.82rem; margin-top: 0.75rem; display: none; }
+
+    /* ── ADMIN LAYOUT ──────────────────────── */
+    #adminApp { display: none; min-height: 100vh; }
+
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--sidebar);
+      color: white;
+      padding: 1.75rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-logo img {
+      width: 38px; height: 38px;
+      border-radius: 8px; object-fit: cover;
+    }
+    .sidebar-logo span {
+      font-size: 0.9rem; font-weight: 700;
+      line-height: 1.2;
+      color: white;
+    }
+    .sidebar-logo small { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.35); font-weight: 400; }
+
+    .nav-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 0.6rem;
+      padding-left: 0.5rem;
+    }
+    .sidebar-nav { list-style: none; margin-bottom: 2rem; }
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      margin-bottom: 0.1rem;
+    }
+    .sidebar-nav li a:hover { background: rgba(255,255,255,0.07); color: white; }
+    .sidebar-nav li a.active { background: rgba(249,184,200,0.15); color: var(--pink); }
+    .sidebar-nav li a .icon { font-size: 1rem; width: 18px; text-align: center; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.25rem;
+    }
+    .logout-btn {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem 0.75rem;
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+    .main-content {
+      margin-left: var(--sidebar-w);
+      padding: 2.5rem;
+      min-height: 100vh;
+    }
+
+    /* ── PANELS ────────────────────────────── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .panel-header h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+
+    .add-btn {
+      background: var(--dark);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.65rem 1.4rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .add-btn:hover { background: #333; }
+
+    /* Cards list */
+    .item-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .item-card-info h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .item-card-info p  { font-size: 0.8rem; color: rgba(0,0,0,0.4); }
+    .item-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .btn-edit, .btn-del {
+      border: none;
+      border-radius: 7px;
+      padding: 0.4rem 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-edit { background: #f0f0f0; color: var(--dark); }
+    .btn-edit:hover { background: #e5e5e5; }
+    .btn-del { background: #fee2e2; color: #dc2626; }
+    .btn-del:hover { opacity: 0.8; }
+
+    .empty-state {
+      background: white;
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      color: rgba(0,0,0,0.35);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    /* ── MODAL / FORM ──────────────────────── */
+    .form-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+      backdrop-filter: blur(4px);
+    }
+    .form-overlay.open { opacity: 1; visibility: visible; }
+    .form-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
+      transform: translateY(12px);
+      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .form-overlay.open .form-card { transform: translateY(0); }
+    .form-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(0,0,0,0.45); margin-bottom: 0.4rem; }
+    .form-control {
+      width: 100%;
+      border: 2px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      padding: 0.7rem 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus { border-color: var(--dark); }
+    textarea.form-control { min-height: 110px; resize: vertical; }
+    .form-hint { font-size: 0.75rem; color: rgba(0,0,0,0.35); margin-top: 0.3rem; }
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end; }
+    .btn-save {
+      background: var(--dark); color: white; border: none;
+      border-radius: 8px; padding: 0.7rem 1.75rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-save:hover { background: #333; }
+    .btn-cancel {
+      background: #f0f0f0; color: var(--dark); border: none;
+      border-radius: 8px; padding: 0.7rem 1.25rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Team member photo preview */
+    .photo-preview {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: 0.5rem;
+      border: 2px solid rgba(0,0,0,0.08);
+      display: none;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--dark); color: white;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.88rem; font-weight: 600;
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <img src="images/logo.jpg" alt="Logo" class="login-logo">
+    <h1>Admin Panel</h1>
+    <p>Astrea eDiscovery</p>
+    <input type="password" class="login-input" id="pwdInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="adminApp">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="images/logo.jpg" alt="Logo">
+      <span>Astrea<small>Admin Panel</small></span>
+    </div>
+
+    <div class="nav-label">Content</div>
+    <ul class="sidebar-nav">
+      <li><a href="#" class="active" onclick="switchPanel('jobs', this)"><span class="icon">💼</span> Career Listings</a></li>
+      <li><a href="#" onclick="switchPanel('resources', this)"><span class="icon">📚</span> Resources</a></li>
+      <li><a href="#" onclick="switchPanel('team', this)"><span class="icon">👥</span> Team Members</a></li>
+    </ul>
+
+    <div class="nav-label">Site</div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html" target="_blank"><span class="icon">🏠</span> View Home</a></li>
+      <li><a href="careers.html" target="_blank"><span class="icon">💼</span> View Careers</a></li>
+      <li><a href="resources.html" target="_blank"><span class="icon">📚</span> View Resources</a></li>
+      <li><a href="about.html" target="_blank"><span class="icon">👥</span> View About</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">⬅ Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- ── JOBS PANEL ── -->
+    <div class="panel active" id="panel-jobs">
+      <div class="panel-header">
+        <h2>Career Listings</h2>
+        <button class="add-btn" onclick="openJobForm()">+ Add Position</button>
+      </div>
+      <div id="jobsAdminList"></div>
+    </div>
+
+    <!-- ── RESOURCES PANEL ── -->
+    <div class="panel" id="panel-resources">
+      <div class="panel-header">
+        <h2>Resources & Articles</h2>
+        <button class="add-btn" onclick="openResourceForm()">+ Add Article</button>
+      </div>
+      <div id="resourcesAdminList"></div>
+    </div>
+
+    <!-- ── TEAM PANEL ── -->
+    <div class="panel" id="panel-team">
+      <div class="panel-header">
+        <h2>Team Members</h2>
+        <button class="add-btn" onclick="openTeamForm()">+ Add Member</button>
+      </div>
+      <p style="font-size:0.85rem;color:rgba(0,0,0,0.45);margin-bottom:1.5rem;">Team members added here appear on the About page automatically.</p>
+      <div id="teamAdminList"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════ JOB FORM ══════ -->
+<div class="form-overlay" id="jobFormOverlay">
+  <div class="form-card">
+    <h3 id="jobFormTitle">Add Position</h3>
+    <input type="hidden" id="jobId">
+    <div class="form-group">
+      <label>Job Title *</label>
+      <input class="form-control" id="jobTitle" placeholder="e.g. eDiscovery Project Manager">
+    </div>
+    <div class="form-group">
+      <label>Department *</label>
+      <input class="form-control" id="jobDept" placeholder="e.g. Operations">
+    </div>
+    <div class="form-group">
+      <label>Location</label>
+      <input class="form-control" id="jobLocation" placeholder="e.g. Remote / Toronto">
+    </div>
+    <div class="form-group">
+      <label>Type</label>
+      <select class="form-control" id="jobType">
+        <option>Full-time</option>
+        <option>Part-time</option>
+        <option>Contract</option>
+        <option>Internship</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea class="form-control" id="jobDesc" placeholder="Describe the role..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Requirements</label>
+      <textarea class="form-control" id="jobReqs" placeholder="One requirement per line..." style="min-height:90px;"></textarea>
+      <div class="form-hint">Enter each requirement on a new line.</div>
+    </div>
+    <div class="form-group">
+      <label>Apply Email</label>
+      <input class="form-control" id="jobEmail" placeholder="careers@astrea-ediscovery.com">
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeJobForm()">Cancel</button>
+      <button class="btn-save" onclick="saveJob()">Save Position</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ RESOURCE FORM ══════ -->
+<div class="form-overlay" id="resourceFormOverlay">
+  <div class="form-card">
+    <h3 id="resourceFormTitle">Add Article</h3>
+    <input type="hidden" id="resourceId">
+    <div class="form-group">
+      <label>Category *</label>
+      <input class="form-control" id="resCategory" placeholder="e.g. EDRM: Identification">
+    </div>
+    <div class="form-group">
+      <label>Title *</label>
+      <input class="form-control" id="resTitle" placeholder="Article title">
+    </div>
+    <div class="form-group">
+      <label>Excerpt (shown on card) *</label>
+      <textarea class="form-control" id="resExcerpt" placeholder="Short summary of the article..." style="min-height:80px;"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Full Content</label>
+      <textarea class="form-control" id="resContent" placeholder="Full article content. Use blank lines to separate paragraphs..." style="min-height:160px;"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Author Name</label>
+      <input class="form-control" id="resAuthor" placeholder="e.g. Tanya Barbiero">
+    </div>
+    <div class="form-group">
+      <label>Author Photo Path</label>
+      <input class="form-control" id="resAuthorPhoto" placeholder="images/tanya.jpg">
+      <div class="form-hint">Path relative to the site root — e.g. images/tanya.jpg</div>
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <input class="form-control" id="resDate" placeholder="e.g. August 22, 2025">
+    </div>
+    <div class="form-group">
+      <label>Read Time</label>
+      <input class="form-control" id="resReadTime" placeholder="e.g. 4 Mins">
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeResourceForm()">Cancel</button>
+      <button class="btn-save" onclick="saveResource()">Save Article</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TEAM FORM ══════ -->
+<div class="form-overlay" id="teamFormOverlay">
+  <div class="form-card">
+    <h3 id="teamFormTitle">Add Team Member</h3>
+    <input type="hidden" id="memberId">
+    <div class="form-group">
+      <label>Full Name *</label>
+      <input class="form-control" id="memberName" placeholder="e.g. Tanya Barbiero">
+    </div>
+    <div class="form-group">
+      <label>Role / Title *</label>
+      <input class="form-control" id="memberRole" placeholder="e.g. Founder & CEO">
+    </div>
+    <div class="form-group">
+      <label>Photo Path</label>
+      <input class="form-control" id="memberPhoto" placeholder="images/tanya.jpg" oninput="previewPhoto(this.value)">
+      <div class="form-hint">Path relative to site root. Place photos in the /images folder.</div>
+      <img id="photoPreview" class="photo-preview" alt="Preview">
+    </div>
+    <div class="form-group">
+      <label>Bio *</label>
+      <textarea class="form-control" id="memberBio" placeholder="Team member bio..." style="min-height:140px;"></textarea>
+      <div class="form-hint">Use a blank line between paragraphs.</div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeTeamForm()">Cancel</button>
+      <button class="btn-save" onclick="saveMember()">Save Member</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ════════════════════════════════════════
+     PASSWORD  — Change this to your own!
+  ════════════════════════════════════════ */
+  const ADMIN_PASSWORD = 'Astrea2025!';
+
+  /* ── Auth ─────────────────────────────── */
+  function doLogin() {
+    const pwd = document.getElementById('pwdInput').value;
+    if (pwd === ADMIN_PASSWORD) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      renderAllPanels();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminApp').style.display = 'none';
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('loginError').style.display = 'none';
+  }
+
+  /* ── Panel switching ──────────────────── */
+  function switchPanel(name, link) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    if (link) link.classList.add('active');
+    event.preventDefault();
+  }
+
+  /* ── Toast ────────────────────────────── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── Helpers ──────────────────────────── */
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function getJobs()    { return JSON.parse(localStorage.getItem('astrea_jobs')      || '[]'); }
+  function getRes()     { return JSON.parse(localStorage.getItem('astrea_resources') || '[]'); }
+  function getTeam()    { return JSON.parse(localStorage.getItem('astrea_team')      || '[]'); }
+  function saveJobs(d)  { localStorage.setItem('astrea_jobs',      JSON.stringify(d)); }
+  function saveRes(d)   { localStorage.setItem('astrea_resources', JSON.stringify(d)); }
+  function saveTeam(d)  { localStorage.setItem('astrea_team',      JSON.stringify(d)); }
+
+  function renderAllPanels() {
+    renderJobsAdmin();
+    renderResourcesAdmin();
+    renderTeamAdmin();
+  }
+
+  /* ══════════ JOBS ══════════ */
+  function renderJobsAdmin() {
+    const jobs = getJobs();
+    const el = document.getElementById('jobsAdminList');
+    if (!jobs.length) {
+      el.innerHTML = '<div class="empty-state">No positions yet. Click "+ Add Position" to get started.</div>';
+      return;
+    }
+    el.innerHTML = jobs.map(j => `
+      <div class="item-card">
+        <div class="item-card-info">
+          <h3>${j.title}</h3>
+          <p>${j.department} · ${j.location} · ${j.type}</p>
+        </div>
+        <div class="item-actions">
+          <button class="btn-edit" onclick="editJob('${j.id}')">Edit</button>
+          <button class="btn-del" onclick="deleteJob('${j.id}')">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function openJobForm(job) {
+    document.getElementById('jobFormTitle').textContent = job ? 'Edit Position' : 'Add Position';
+    document.getElementById('jobId').value = job?.id || '';
+    document.getElementById('jobTitle').value = job?.title || '';
+    document.getElementById('jobDept').value = job?.department || '';
+    document.getElementById('jobLocation').value = job?.location || '';
+    document.getElementById('jobType').value = job?.type || 'Full-time';
+    document.getElementById('jobDesc').value = job?.description || '';
+    document.getElementById('jobReqs').value = (job?.requirements || []).join('\n');
+    document.getElementById('jobEmail').value = job?.applyEmail || 'careers@astrea-ediscovery.com';
+    document.getElementById('jobFormOverlay').classList.add('open');
+  }
+
+  function closeJobForm() { document.getElementById('jobFormOverlay').classList.remove('open'); }
+
+  function editJob(id) {
+    const j = getJobs().find(x => x.id === id);
+    if (j) openJobForm(j);
+  }
+
+  function saveJob() {
+    const title = document.getElementById('jobTitle').value.trim();
+    const dept  = document.getElementById('jobDept').value.trim();
+    if (!title || !dept) { alert('Title and Department are required.'); return; }
+
+    const id = document.getElementById('jobId').value || uid();
+    const job = {
+      id,
+      title,
+      department: dept,
+      location:    document.getElementById('jobLocation').value.trim() || 'Remote',
+      type:        document.getElementById('jobType').value,
+      description: document.getElementById('jobDesc').value.trim(),
+      requirements: document.getElementById('jobReqs').value.split('\n').map(s => s.trim()).filter(Boolean),
+      applyEmail:  document.getElementById('jobEmail').value.trim(),
+    };
+
+    const jobs = getJobs();
+    const idx = jobs.findIndex(j => j.id === id);
+    if (idx >= 0) jobs[idx] = job; else jobs.push(job);
+    saveJobs(jobs);
+    renderJobsAdmin();
+    closeJobForm();
+    showToast('Position saved ✓');
+  }
+
+  function deleteJob(id) {
+    if (!confirm('Delete this position?')) return;
+    saveJobs(getJobs().filter(j => j.id !== id));
+    renderJobsAdmin();
+    showToast('Position deleted');
+  }
+
+  /* ══════════ RESOURCES ══════════ */
+  function renderResourcesAdmin() {
+    const res = getRes();
+    const el = document.getElementById('resourcesAdminList');
+    if (!res.length) {
+      el.innerHTML = '<div class="empty-state">No articles yet. Click "+ Add Article" to get started.</div>';
+      return;
+    }
+    el.innerHTML = res.map(r => `
+      <div class="item-card">
+        <div class="item-card-info">
+          <h3>${r.title}</h3>
+          <p>${r.category} · ${r.author || 'No author'} · ${r.date || 'No date'}</p>
+        </div>
+        <div class="item-actions">
+          <button class="btn-edit" onclick="editResource('${r.id}')">Edit</button>
+          <button class="btn-del" onclick="deleteResource('${r.id}')">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function openResourceForm(r) {
+    document.getElementById('resourceFormTitle').textContent = r ? 'Edit Article' : 'Add Article';
+    document.getElementById('resourceId').value   = r?.id || '';
+    document.getElementById('resCategory').value  = r?.category || '';
+    document.getElementById('resTitle').value     = r?.title || '';
+    document.getElementById('resExcerpt').value   = r?.excerpt || '';
+    document.getElementById('resContent').value   = r?.content || '';
+    document.getElementById('resAuthor').value    = r?.author || '';
+    document.getElementById('resAuthorPhoto').value = r?.authorPhoto || '';
+    document.getElementById('resDate').value      = r?.date || '';
+    document.getElementById('resReadTime').value  = r?.readTime || '';
+    document.getElementById('resourceFormOverlay').classList.add('open');
+  }
+
+  function closeResourceForm() { document.getElementById('resourceFormOverlay').classList.remove('open'); }
+
+  function editResource(id) {
+    const r = getRes().find(x => x.id === id);
+    if (r) openResourceForm(r);
+  }
+
+  function saveResource() {
+    const title = document.getElementById('resTitle').value.trim();
+    const excerpt = document.getElementById('resExcerpt').value.trim();
+    if (!title || !excerpt) { alert('Title and Excerpt are required.'); return; }
+
+    const id = document.getElementById('resourceId').value || uid();
+    const article = {
+      id,
+      category:    document.getElementById('resCategory').value.trim(),
+      title,
+      excerpt,
+      content:     document.getElementById('resContent').value.trim(),
+      author:      document.getElementById('resAuthor').value.trim(),
+      authorPhoto: document.getElementById('resAuthorPhoto').value.trim(),
+      date:        document.getElementById('resDate').value.trim(),
+      readTime:    document.getElementById('resReadTime').value.trim(),
+    };
+
+    const res = getRes();
+    const idx = res.findIndex(r => r.id === id);
+    if (idx >= 0) res[idx] = article; else res.push(article);
+    saveRes(res);
+    renderResourcesAdmin();
+    closeResourceForm();
+    showToast('Article saved ✓');
+  }
+
+  function deleteResource(id) {
+    if (!confirm('Delete this article?')) return;
+    saveRes(getRes().filter(r => r.id !== id));
+    renderResourcesAdmin();
+    showToast('Article deleted');
+  }
+
+  /* ══════════ TEAM ══════════ */
+  function renderTeamAdmin() {
+    const team = getTeam();
+    const el = document.getElementById('teamAdminList');
+    if (!team.length) {
+      el.innerHTML = '<div class="empty-state">No team members yet. Click "+ Add Member" to get started.</div>';
+      return;
+    }
+    el.innerHTML = team.map(m => `
+      <div class="item-card">
+        <div class="item-card-info" style="display:flex;align-items:center;gap:1rem;">
+          ${m.photo
+            ? `<img src="${m.photo}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">`
+            : `<div style="width:42px;height:42px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">👤</div>`}
+          <div>
+            <h3>${m.name}</h3>
+            <p>${m.role}</p>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-edit" onclick="editMember('${m.id}')">Edit</button>
+          <button class="btn-del" onclick="deleteMember('${m.id}')">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function openTeamForm(m) {
+    document.getElementById('teamFormTitle').textContent = m ? 'Edit Member' : 'Add Member';
+    document.getElementById('memberId').value   = m?.id || '';
+    document.getElementById('memberName').value = m?.name || '';
+    document.getElementById('memberRole').value = m?.role || '';
+    document.getElementById('memberPhoto').value = m?.photo || '';
+    document.getElementById('memberBio').value  = m?.bio || '';
+    previewPhoto(m?.photo || '');
+    document.getElementById('teamFormOverlay').classList.add('open');
+  }
+
+  function closeTeamForm() { document.getElementById('teamFormOverlay').classList.remove('open'); }
+
+  function previewPhoto(src) {
+    const img = document.getElementById('photoPreview');
+    if (src) { img.src = src; img.style.display = 'block'; }
+    else { img.style.display = 'none'; }
+  }
+
+  function editMember(id) {
+    const m = getTeam().find(x => x.id === id);
+    if (m) openTeamForm(m);
+  }
+
+  function saveMember() {
+    const name = document.getElementById('memberName').value.trim();
+    const role = document.getElementById('memberRole').value.trim();
+    const bio  = document.getElementById('memberBio').value.trim();
+    if (!name || !role || !bio) { alert('Name, Role, and Bio are required.'); return; }
+
+    const id = document.getElementById('memberId').value || uid();
+    const member = {
+      id, name, role, bio,
+      photo: document.getElementById('memberPhoto').value.trim(),
+    };
+
+    const team = getTeam();
+    const idx = team.findIndex(m => m.id === id);
+    if (idx >= 0) team[idx] = member; else team.push(member);
+    saveTeam(team);
+    renderTeamAdmin();
+    closeTeamForm();
+    showToast('Team member saved ✓');
+  }
+
+  function deleteMember(id) {
+    if (!confirm('Remove this team member?')) return;
+    saveTeam(getTeam().filter(m => m.id !== id));
+    renderTeamAdmin();
+    showToast('Member removed');
+  }
+
+  /* Close overlays on backdrop click */
+  ['jobFormOverlay','resourceFormOverlay','teamFormOverlay'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources — Astrea eDiscovery</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Hero */
+    .resources-hero {
+      text-align: center;
+      padding: 5rem 2rem 3.5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .resources-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(26,26,26,0.5);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s ease forwards;
+    }
+    .resources-hero h1 {
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.25s ease forwards;
+    }
+    .resources-hero p {
+      font-size: 1.05rem;
+      color: rgba(26,26,26,0.6);
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.4s ease forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Category filter */
+    .category-filter {
+      max-width: 1240px;
+      margin: 0 auto 2.5rem;
+      padding: 0 2rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      border: 2px solid rgba(26,26,26,0.15);
+      background: transparent;
+      color: rgba(26,26,26,0.6);
+      padding: 0.5rem 1.25rem;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--dark);
+      border-color: var(--dark);
+      color: white;
+    }
+
+    /* Articles grid */
+    .articles-section {
+      padding: 0 2rem 4rem;
+    }
+    .articles-grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .article-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lift);
+    }
+    .article-img {
+      height: 180px;
+      background: var(--pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .article-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .article-img-placeholder {
+      font-size: 4rem;
+    }
+    .article-body {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .article-category {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8B5CF6;
+      margin-bottom: 0.6rem;
+    }
+    .article-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    .article-excerpt {
+      font-size: 0.88rem;
+      color: rgba(26,26,26,0.62);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.25rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .article-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--pink);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      overflow: hidden;
+    }
+    .article-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .article-byline { font-size: 0.78rem; color: rgba(26,26,26,0.5); }
+    .article-byline strong { display: block; font-size: 0.82rem; color: var(--dark); font-weight: 600; }
+
+    /* Empty state */
+    .no-articles {
+      grid-column: 1 / -1;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 4rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+    .no-articles p { color: rgba(26,26,26,0.5); }
+
+    /* View all */
+    .view-all-wrap {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    /* Article modal */
+    .art-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.65);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      backdrop-filter: blur(5px);
+    }
+    .art-overlay.open { opacity: 1; visibility: visible; }
+    .art-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      max-width: 740px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      transform: scale(0.93) translateY(16px);
+      transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+    .art-overlay.open .art-modal { transform: scale(1) translateY(0); }
+    .art-modal-header {
+      background: var(--pink);
+      padding: 3rem 3rem 2rem;
+      position: relative;
+    }
+    .art-modal-close {
+      position: absolute;
+      top: 1.25rem; right: 1.25rem;
+      width: 34px; height: 34px;
+      background: var(--dark);
+      border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: white;
+      transition: transform var(--transition);
+    }
+    .art-modal-close:hover { transform: rotate(90deg); }
+    .art-modal-cat { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #8B5CF6; margin-bottom: 0.75rem; }
+    .art-modal-title { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .art-modal-meta { display: flex; align-items: center; gap: 0.75rem; }
+    .art-modal-body { padding: 2.5rem 3rem; font-size: 0.97rem; line-height: 1.85; color: rgba(26,26,26,0.78); }
+
+    @media (max-width: 900px) {
+      .articles-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .articles-grid { grid-template-columns: 1fr; }
+      .art-modal-header { padding: 2rem 1.5rem; }
+      .art-modal-body { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<!-- HERO -->
+<section class="resources-hero">
+  <div class="resources-label">Resources</div>
+  <h1>Learn With Us</h1>
+  <p>Ensuring our partners and clients are always on the same page for the eDiscovery of today.</p>
+</section>
+
+<!-- CATEGORY FILTER -->
+<div class="category-filter reveal" id="categoryFilter">
+  <button class="filter-btn active" onclick="filterArticles('all', this)">All</button>
+</div>
+
+<!-- ARTICLES -->
+<section class="articles-section">
+  <div class="articles-grid" id="articlesGrid"></div>
+  <div class="view-all-wrap" id="viewAllWrap" style="display:none;">
+    <button class="btn-outline" onclick="showAllArticles()">View All Articles</button>
+  </div>
+</section>
+
+<!-- ARTICLE MODAL -->
+<div class="art-overlay" id="artOverlay" onclick="closeArtModalOnOverlay(event)">
+  <div class="art-modal">
+    <div class="art-modal-header">
+      <button class="art-modal-close" onclick="closeArtModal()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <line x1="1" y1="1" x2="13" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="13" y1="1" x2="1" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="art-modal-cat" id="artModalCat"></div>
+      <div class="art-modal-title" id="artModalTitle"></div>
+      <div class="art-modal-meta" id="artModalMeta"></div>
+    </div>
+    <div class="art-modal-body" id="artModalBody"></div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="js/components.js"></script>
+<script>
+  const PREVIEW_COUNT = 6;
+  let currentFilter = 'all';
+  let showAll = false;
+
+  function getArticles() {
+    return JSON.parse(localStorage.getItem('astrea_resources') || '[]');
+  }
+
+  function buildCategoryFilters(articles) {
+    const cats = [...new Set(articles.map(a => a.category).filter(Boolean))];
+    const bar = document.getElementById('categoryFilter');
+    bar.innerHTML = `<button class="filter-btn active" onclick="filterArticles('all', this)">All</button>` +
+      cats.map(c => `<button class="filter-btn" onclick="filterArticles('${c}', this)">${c}</button>`).join('');
+  }
+
+  function filterArticles(cat, btn) {
+    currentFilter = cat;
+    showAll = false;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderArticles();
+  }
+
+  function showAllArticles() {
+    showAll = true;
+    renderArticles();
+    document.getElementById('viewAllWrap').style.display = 'none';
+  }
+
+  function renderArticles() {
+    const all = getArticles();
+    const filtered = currentFilter === 'all'
+      ? all
+      : all.filter(a => a.category === currentFilter);
+    const toShow = (showAll || filtered.length <= PREVIEW_COUNT)
+      ? filtered
+      : filtered.slice(0, PREVIEW_COUNT);
+
+    document.getElementById('viewAllWrap').style.display =
+      (!showAll && filtered.length > PREVIEW_COUNT) ? 'block' : 'none';
+
+    const grid = document.getElementById('articlesGrid');
+
+    if (!filtered.length) {
+      grid.innerHTML = `<div class="no-articles">
+        <p>No articles yet — check back soon!</p>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = toShow.map(a => `
+      <div class="article-card reveal" onclick="openArticle('${a.id}')">
+        <div class="article-img">
+          ${a.image
+            ? `<img src="${a.image}" alt="${a.title}">`
+            : `<img src="images/icon-identify.png" alt="article" style="width:120px;height:120px;object-fit:contain;">`}
+        </div>
+        <div class="article-body">
+          <div class="article-category">${a.category || 'General'}</div>
+          <div class="article-title">${a.title}</div>
+          <div class="article-excerpt">${a.excerpt}</div>
+          <div class="article-meta">
+            <div class="article-avatar">
+              ${a.authorPhoto ? `<img src="${a.authorPhoto}" alt="${a.author}">` : '👤'}
+            </div>
+            <div class="article-byline">
+              <strong>${a.author || 'Astrea Team'}</strong>
+              ${a.date || ''} ${a.readTime ? '• ' + a.readTime : ''}
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function openArticle(id) {
+    const a = getArticles().find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('artModalCat').textContent = a.category || '';
+    document.getElementById('artModalTitle').textContent = a.title;
+    document.getElementById('artModalMeta').innerHTML = `
+      <div class="article-avatar">
+        ${a.authorPhoto ? `<img src="${a.authorPhoto}" alt="${a.author}">` : '👤'}
+      </div>
+      <div class="article-byline">
+        <strong>${a.author || 'Astrea Team'}</strong>
+        ${a.date || ''} ${a.readTime ? '• ' + a.readTime : ''}
+      </div>`;
+    document.getElementById('artModalBody').innerHTML =
+      (a.content || a.excerpt || '').replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>');
+    document.getElementById('artOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeArtModal() {
+    document.getElementById('artOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeArtModalOnOverlay(e) {
+    if (e.target === document.getElementById('artOverlay')) closeArtModal();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeArtModal(); });
+
+  const articles = getArticles();
+  buildCategoryFilters(articles);
+  renderArticles();
+</script>
+</body>
+</html>

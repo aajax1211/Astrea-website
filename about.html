@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Astrea eDiscovery</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── ABOUT PAGE ────────────────────────── */
+
+    .page-hero {
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: heroFade 0.7s 0.1s ease forwards;
+    }
+
+    .page-hero p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: rgba(26,26,26,0.65);
+      opacity: 0;
+      animation: heroFade 0.7s 0.3s ease forwards;
+    }
+
+    @keyframes heroFade {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TEAM GRID ──────────────────────────── */
+    .team-section {
+      padding: 0 2rem 3rem;
+    }
+
+    .team-grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .team-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    .team-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lift);
+    }
+
+    .team-card:hover .card-overlay {
+      opacity: 1;
+    }
+
+    .card-img-wrap {
+      position: relative;
+      height: 320px;
+      overflow: hidden;
+      background: var(--pink-light);
+    }
+
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.5s ease;
+    }
+
+    .team-card:hover .card-img-wrap img {
+      transform: scale(1.04);
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,26,26,0.55) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition);
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+    }
+
+    .card-overlay span {
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-info {
+      padding: 1.5rem;
+    }
+
+    .card-info h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .card-info .role {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: rgba(26,26,26,0.5);
+    }
+
+    /* ── MODAL ──────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.65);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-img {
+      background: var(--pink-light);
+      overflow: hidden;
+    }
+
+    .modal-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .modal-body {
+      padding: 3rem 2.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 36px;
+      height: 36px;
+      background: var(--dark);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      transition: background var(--transition), transform var(--transition);
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: #444;
+      transform: rotate(90deg);
+    }
+
+    .modal-name {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .modal-role {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(26,26,26,0.45);
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .modal-bio {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: rgba(26,26,26,0.75);
+    }
+
+    /* ── CHO SECTION ────────────────────────── */
+    .cho-section {
+      padding: 0 2rem 4rem;
+    }
+
+    .cho-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 5rem 4rem;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 4rem;
+      align-items: center;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cho-inner::before {
+      content: 'CHO';
+      position: absolute;
+      top: -0.1em;
+      right: -0.05em;
+      font-size: 12rem;
+      font-weight: 900;
+      color: var(--pink);
+      opacity: 0.35;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cho-img {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cho-img img {
+      width: 100%;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      aspect-ratio: 3/4;
+      display: block;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+
+    /* Placeholder for CHO when no image */
+    .cho-img-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-md);
+      background: var(--pink-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+    }
+
+    .cho-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cho-badge {
+      display: inline-block;
+      background: var(--pink);
+      color: var(--dark);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border-radius: 50px;
+      margin-bottom: 1.25rem;
+    }
+
+    .cho-name {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.4rem;
+    }
+
+    .cho-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(26,26,26,0.45);
+      margin-bottom: 2rem;
+    }
+
+    .cho-bio {
+      font-size: 0.97rem;
+      line-height: 1.85;
+      color: rgba(26,26,26,0.72);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 1024px) {
+      .modal { grid-template-columns: 280px 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .cho-inner {
+        grid-template-columns: 1fr;
+        padding: 3rem 2rem;
+        gap: 2.5rem;
+      }
+      .cho-img { max-width: 320px; margin: 0 auto; }
+      .cho-inner::before { font-size: 6rem; }
+    }
+
+    @media (max-width: 640px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .modal {
+        grid-template-columns: 1fr;
+        grid-template-rows: 260px 1fr;
+        max-height: 85vh;
+      }
+      .modal-img { height: 260px; }
+      .modal-body { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════════ -->
+<div id="site-header"></div>
+
+
+<!-- ═══════════════ PAGE HERO ════════════ -->
+<div class="page-hero">
+  <h1>Your Team</h1>
+  <p>Behind every task is a person who cares about the outcome. That's how we work, and that's how we promise to support you.</p>
+</div>
+
+
+<!-- ═══════════════ TEAM GRID ════════════ -->
+<section class="team-section">
+  <div class="team-grid">
+
+    <!--
+      INSTRUCTIONS FOR YOU:
+      Replace the placeholder text below with real names, roles, bios, and photo paths.
+      Photos should go in the /images/ folder and be referenced like: src="images/team-jane.jpg"
+      Each team-card has a data-member attribute — the JS reads it to open the right modal.
+    -->
+
+    <div class="team-card reveal reveal-delay-1" onclick="openModal('member1')">
+      <div class="card-img-wrap">
+        <!--
+          Replace src with your team member's photo:
+          src="images/team-member1.jpg"
+          The placeholder below shows a pink background until you add the real photo.
+        -->
+        <div style="width:100%;height:100%;background:var(--pink-light);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩</div>
+        <div class="card-overlay"><span>View Profile</span></div>
+      </div>
+      <div class="card-info">
+        <h3>[Team Member Name]</h3>
+        <p class="role">[Title / Role]</p>
+      </div>
+    </div>
+
+    <div class="team-card reveal reveal-delay-2" onclick="openModal('member2')">
+      <div class="card-img-wrap">
+        <div style="width:100%;height:100%;background:var(--pink-light);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩</div>
+        <div class="card-overlay"><span>View Profile</span></div>
+      </div>
+      <div class="card-info">
+        <h3>[Team Member Name]</h3>
+        <p class="role">[Title / Role]</p>
+      </div>
+    </div>
+
+    <div class="team-card reveal reveal-delay-3" onclick="openModal('member3')">
+      <div class="card-img-wrap">
+        <div style="width:100%;height:100%;background:var(--pink-light);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩</div>
+        <div class="card-overlay"><span>View Profile</span></div>
+      </div>
+      <div class="card-info">
+        <h3>[Team Member Name]</h3>
+        <p class="role">[Title / Role]</p>
+      </div>
+    </div>
+
+    <!-- Add more cards by duplicating the block above -->
+
+  </div>
+</section>
+
+
+<!-- ═══════════════ MODALS ════════════════ -->
+<!-- Shared overlay — JS swaps content inside .modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-img" id="modalImg">
+      <!-- image injected by JS -->
+    </div>
+    <div class="modal-body">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <line x1="1" y1="1" x2="13" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="13" y1="1" x2="1" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div id="modalName" class="modal-name"></div>
+      <div id="modalRole" class="modal-role"></div>
+      <div id="modalBio" class="modal-bio"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ CHO SECTION ══════════ -->
+<section class="cho-section">
+  <div class="cho-inner reveal">
+
+    <div class="cho-img">
+      <!--
+        To use Bristol's real photo, replace the placeholder below with:
+        <img src="images/bristol.jpg" alt="Bristol Barbiero — Chief Happiness Officer">
+        And remove the placeholder div.
+      -->
+      <div class="cho-img-placeholder">🐾</div>
+    </div>
+
+    <div class="cho-content">
+      <span class="cho-badge">Our Favourite Team Member</span>
+      <div class="cho-name">Bristol Barbiero</div>
+      <div class="cho-title">Chief Happiness Officer</div>
+      <p class="cho-bio">
+        Bristol has 9 years at Tanya's side, providing absolute joy and happiness. Bristol is not an early riser, but once she wakes she has a very set routine — a short walk, after which her mom carries her back home and makes her a smoothie for breakfast. After breakfast, she hurries to the office where she ensures Tanya is calm, cool, and collected at all times.<br><br>
+        Bristol's sole purpose in life is to provide happiness and ensure stress is kept to a minimum! She prefers the finer things in life and believes she was meant for a life of luxury. Given that she is the sweetest, kindest, most loving pup around, Astrea believes Bristol deserves the very best!
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════ FOOTER ════════════════ -->
+<div id="site-footer"></div>
+
+
+<script src="js/components.js"></script>
+<script>
+  /* ══════════════════════════════════════════
+     TEAM MEMBER DATA
+     Fill in the real names, roles, bios, and
+     photo paths for each team member here.
+     ══════════════════════════════════════════ */
+  const members = {
+    member1: {
+      name:  '[Team Member Name]',
+      role:  '[Title / Role]',
+      bio:   '[Add this person\'s bio here. Describe their background, expertise, and what they bring to Astrea eDiscovery. You can include multiple paragraphs by pressing Enter twice between them.]',
+      // photo: 'images/team-member1.jpg'  ← uncomment and update when you have photos
+      photo: null
+    },
+    member2: {
+      name:  '[Team Member Name]',
+      role:  '[Title / Role]',
+      bio:   '[Add this person\'s bio here.]',
+      photo: null
+    },
+    member3: {
+      name:  '[Team Member Name]',
+      role:  '[Title / Role]',
+      bio:   '[Add this person\'s bio here.]',
+      photo: null
+    }
+  };
+
+  function openModal(id) {
+    const m = members[id];
+    if (!m) return;
+
+    const imgEl = document.getElementById('modalImg');
+
+    if (m.photo) {
+      imgEl.innerHTML = `<img src="${m.photo}" alt="${m.name}">`;
+    } else {
+      imgEl.innerHTML = `<div style="
+        width:100%;height:100%;background:var(--pink-light);
+        display:flex;align-items:center;justify-content:center;
+        font-size:6rem;">👩</div>`;
+    }
+
+    document.getElementById('modalName').textContent = m.name;
+    document.getElementById('modalRole').textContent  = m.role;
+    document.getElementById('modalBio').innerHTML = m.bio
+      .split('\n\n')
+      .map(p => `<p style="margin-bottom:1rem;">${p}</p>`)
+      .join('');
+
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOnOverlay(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  // ESC key closes modal
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+</body>
+</html>

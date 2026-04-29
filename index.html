@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astrea eDiscovery — Where People and Processes Meet Common Sense</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .tool-logo-dark {
+      background: #111;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 200px;
+      height: 68px;
+    }
+
+    /* ── PAGE-SPECIFIC ─────────────────────── */
+
+    /* Hero */
+    .hero {
+      min-height: calc(100vh - 76px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+    }
+
+    .hero-icon {
+      margin-bottom: 2.5rem;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    .hero h1 {
+      font-size: clamp(3.2rem, 8vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: heroFade 0.8s 0.2s ease forwards;
+    }
+
+    .hero-tag {
+      font-size: 0.82rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: rgba(26,26,26,0.55);
+      opacity: 0;
+      animation: heroFade 0.8s 0.45s ease forwards;
+    }
+
+    @keyframes heroFade {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0.45;
+      animation: heroFade 1s 1s ease forwards;
+    }
+
+    .hero-scroll span {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--dark), transparent);
+      animation: scrollPulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.2); }
+    }
+
+    /* Values */
+    .values-section {
+      padding: 0 2rem 2.5rem;
+    }
+
+    .values-grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .value-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 2.75rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+      cursor: default;
+    }
+
+    .value-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lift);
+    }
+
+    .value-card h3 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .value-card p {
+      font-size: 0.93rem;
+      line-height: 1.65;
+      color: rgba(26,26,26,0.65);
+    }
+
+    /* EDRM */
+    .edrm-section {
+      padding: 2.5rem 2rem;
+    }
+
+    .edrm-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 5rem 3.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+
+    .edrm-inner h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.25rem;
+    }
+
+    .edrm-inner .lead {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(26,26,26,0.65);
+      max-width: 680px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .edrm-icons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .edrm-icon-tile {
+      background: var(--pink);
+      border-radius: var(--radius-md);
+      padding: 3.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      transition: transform var(--transition);
+    }
+
+    .edrm-icon-tile:hover { transform: translateY(-4px); }
+
+    .edrm-icon-tile span {
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* CTA Banner */
+    .cta-section {
+      padding: 0 2rem 2.5rem;
+    }
+
+    .cta-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 3.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .cta-inner h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* Toolbelt */
+    .toolbelt-section {
+      padding: 0 2rem 2.5rem;
+    }
+
+    .toolbelt-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 4.5rem 3.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .toolbelt-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .toolbelt-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .toolbelt-header p {
+      font-size: 0.9rem;
+      font-style: italic;
+      color: rgba(26,26,26,0.5);
+    }
+
+    .toolbelt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .tool-item {
+      padding: 0 2.5rem;
+      text-align: center;
+      border-right: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .tool-item:last-child { border-right: none; }
+
+    .tool-logo-area {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .tool-logo-relativity {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #E8820C;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tool-logo-reveal {
+      font-size: 2rem;
+      font-weight: 900;
+      font-style: italic;
+      color: #6B1F6B;
+      letter-spacing: -0.03em;
+    }
+
+    .tool-logo-logikcull {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #1B3A5C;
+      letter-spacing: -0.03em;
+    }
+
+    .tool-item h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .tool-item p {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: rgba(26,26,26,0.6);
+      margin-bottom: 1.25rem;
+    }
+
+    .tool-link {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--dark);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--transition);
+    }
+
+    .tool-link:hover { border-color: var(--dark); }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 900px) {
+      .values-grid,
+      .edrm-icons,
+      .toolbelt-grid { grid-template-columns: 1fr; }
+
+      .tool-item { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.07); padding: 2rem 1rem; }
+      .tool-item:last-child { border-bottom: none; }
+
+      .cta-inner { flex-direction: column; text-align: center; }
+
+      .edrm-inner { padding: 3rem 1.5rem; }
+      .toolbelt-inner { padding: 3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════════ -->
+<div id="site-header"></div>
+
+
+<!-- ═══════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-icon">
+    <img src="images/logo.jpg" alt="Astrea eDiscovery" style="width:160px;height:160px;object-fit:cover;border-radius:32px;box-shadow:0 12px 40px rgba(0,0,0,0.1);">
+  </div>
+
+  <h1>Astrea eDiscovery</h1>
+  <p class="hero-tag">Where people and processes meet common sense</p>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+
+<!-- ═══════════════ VALUES ════════════════ -->
+<section class="values-section">
+  <div class="values-grid">
+    <div class="value-card reveal reveal-delay-1">
+      <h3>Focus</h3>
+      <p>We deliver accurate, defensible results — every time.</p>
+    </div>
+    <div class="value-card reveal reveal-delay-2">
+      <h3>Clarity</h3>
+      <p>We simplify complex data, making it actionable.</p>
+    </div>
+    <div class="value-card reveal reveal-delay-3">
+      <h3>Speed</h3>
+      <p>We move at the speed of litigation to keep your case on track.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ EDRM ═════════════════ -->
+<section class="edrm-section">
+  <div class="edrm-inner reveal">
+    <h2>Astrea Is Your Partner Across The Entire EDRM.</h2>
+    <p class="lead">We support every stage of the litigation lifecycle — from choosing the right platform to preparing for arbitration, discovery, or trial. Whether it's strategy, execution, or expert support, we help you simplify and move forward with confidence.</p>
+
+    <div class="edrm-icons">
+      <!-- Search / Investigation -->
+      <div class="edrm-icon-tile reveal reveal-delay-1">
+        <img src="images/icon-search.png" alt="Discovery" style="width:100px;height:100px;object-fit:contain;">
+        <span>Discovery</span>
+      </div>
+      <!-- Security / Shield -->
+      <div class="edrm-icon-tile reveal reveal-delay-2">
+        <img src="images/icon-security.png" alt="Security" style="width:100px;height:100px;object-fit:contain;">
+        <span>Security</span>
+      </div>
+      <!-- Cloud / Review -->
+      <div class="edrm-icon-tile reveal reveal-delay-3">
+        <img src="images/icon-cloud.png" alt="Review" style="width:100px;height:100px;object-fit:contain;">
+        <span>Review</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ CTA ═══════════════════ -->
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <h2>Precision Starts Here</h2>
+    <a href="contact.html" class="btn-outline">Contact Us</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════ TOOLBELT ═════════════ -->
+<section class="toolbelt-section">
+  <div class="toolbelt-inner reveal">
+    <div class="toolbelt-header">
+      <h2>Our Toolbelt</h2>
+      <p>Collaboration starts with the right tools</p>
+    </div>
+
+    <div class="toolbelt-grid">
+      <div class="tool-item">
+        <div class="tool-logo-area">
+          <div class="tool-logo-dark">
+            <img src="images/logo-relativity.png" alt="Relativity" style="max-width:180px;max-height:42px;object-fit:contain;">
+          </div>
+        </div>
+        <h3>Power meets control</h3>
+        <p>Leverage advanced AI in the industry's leading cloud platform and streamline every phase of eDiscovery.</p>
+        <a href="#" class="tool-link">Read About Relativity →</a>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-logo-area">
+          <div class="tool-logo-dark">
+            <img src="images/logo-reveal.png" alt="Reveal" style="max-width:180px;max-height:42px;object-fit:contain;">
+          </div>
+        </div>
+        <h3>AI you can trust</h3>
+        <p>Use cutting-edge AI and interactive visual analytics to uncover insights faster, reduce data volume, and accelerate your review.</p>
+        <a href="#" class="tool-link">Read About Reveal →</a>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-logo-area">
+          <div class="tool-logo-dark">
+            <img src="images/logo-logikcull.png" alt="Logikcull" style="max-width:180px;max-height:42px;object-fit:contain;">
+          </div>
+        </div>
+        <h3>Fast, secure, easy</h3>
+        <p>Simplify eDiscovery with instant data uploads, automated organization, and intuitive search filters.</p>
+        <a href="#" class="tool-link">Read About Logikcull →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ FOOTER ════════════════ -->
+<div id="site-footer"></div>
+
+<script src="js/components.js"></script>
+</body>
+</html>
