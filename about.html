@@ -377,52 +377,41 @@
 <section class="team-section">
   <div class="team-grid">
 
-    <!--
-      INSTRUCTIONS FOR YOU:
-      Replace the placeholder text below with real names, roles, bios, and photo paths.
-      Photos should go in the /images/ folder and be referenced like: src="images/team-jane.jpg"
-      Each team-card has a data-member attribute — the JS reads it to open the right modal.
-    -->
-
-    <div class="team-card reveal reveal-delay-1" onclick="openModal('member1')">
+    <!-- Tanya -->
+    <div class="team-card reveal reveal-delay-1" onclick="openModal('tanya')">
       <div class="card-img-wrap">
-        <!--
-          Replace src with your team member's photo:
-          src="images/team-member1.jpg"
-          The placeholder below shows a pink background until you add the real photo.
-        -->
-        <div style="width:100%;height:100%;background:var(--pink-light);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩</div>
+        <img src="images/Tanya.jpeg" alt="Tanya Barbiero">
         <div class="card-overlay"><span>View Profile</span></div>
       </div>
       <div class="card-info">
-        <h3>[Team Member Name]</h3>
-        <p class="role">[Title / Role]</p>
+        <h3>Tanya Barbiero</h3>
+        <p class="role">CEO</p>
       </div>
     </div>
 
-    <div class="team-card reveal reveal-delay-2" onclick="openModal('member2')">
+    <!-- Michelle -->
+    <div class="team-card reveal reveal-delay-2" onclick="openModal('michelle')">
       <div class="card-img-wrap">
-        <div style="width:100%;height:100%;background:var(--pink-light);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩</div>
+        <img src="images/michelle.jpg" alt="Michelle Lee">
         <div class="card-overlay"><span>View Profile</span></div>
       </div>
       <div class="card-info">
-        <h3>[Team Member Name]</h3>
-        <p class="role">[Title / Role]</p>
+        <h3>Michelle Lee</h3>
+        <p class="role">COO & CFO</p>
       </div>
     </div>
 
-    <div class="team-card reveal reveal-delay-3" onclick="openModal('member3')">
+    <!-- Jessica -->
+    <div class="team-card reveal reveal-delay-3" onclick="openModal('jessica')">
       <div class="card-img-wrap">
-        <div style="width:100%;height:100%;background:var(--pink-light);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩</div>
+        <img src="images/Jessica.png" alt="Jessica Morra">
         <div class="card-overlay"><span>View Profile</span></div>
       </div>
       <div class="card-info">
-        <h3>[Team Member Name]</h3>
-        <p class="role">[Title / Role]</p>
+        <h3>Jessica Morra</h3>
+        <p class="role">Administrative Coordinator</p>
       </div>
     </div>
-
-    <!-- Add more cards by duplicating the block above -->
 
   </div>
 </section>
@@ -457,10 +446,7 @@
     <div class="cho-img">
       <!--
         To use Bristol's real photo, replace the placeholder below with:
-        <img src="images/bristol.jpg" alt="Bristol Barbiero — Chief Happiness Officer">
-        And remove the placeholder div.
-      -->
-      <div class="cho-img-placeholder">🐾</div>
+      <img src="images/bristol.jpg" alt="Bristol Barbiero — Chief Happiness Officer" style="width:100%;border-radius:var(--radius-md);object-fit:cover;aspect-ratio:3/4;display:block;box-shadow:0 20px 60px rgba(0,0,0,0.12);">
     </div>
 
     <div class="cho-content">
@@ -489,24 +475,23 @@
      photo paths for each team member here.
      ══════════════════════════════════════════ */
   const members = {
-    member1: {
-      name:  '[Team Member Name]',
-      role:  '[Title / Role]',
-      bio:   '[Add this person\'s bio here. Describe their background, expertise, and what they bring to Astrea eDiscovery. You can include multiple paragraphs by pressing Enter twice between them.]',
-      // photo: 'images/team-member1.jpg'  ← uncomment and update when you have photos
-      photo: null
+    tanya: {
+      name:  'Tanya Barbiero',
+      role:  'CEO',
+      photo: 'images/Tanya.jpeg',
+      bio:   'With more than 20 years of experience in leading law firms, Tanya has cultivated extensive trial expertise and a strong reputation in the legal community.\n\nCareer highlights include leading an eDiscovery team at a prominent law firm, where she spearheaded innovative strategies and solutions.\n\nFrequently sought after as a speaker, she has shared insights on legal practices and technology at numerous conferences, reflecting a commitment to advancing the field and supporting professional growth among peers.'
     },
-    member2: {
-      name:  '[Team Member Name]',
-      role:  '[Title / Role]',
-      bio:   '[Add this person\'s bio here.]',
-      photo: null
+    michelle: {
+      name:  'Michelle Lee',
+      role:  'COO & CFO',
+      photo: 'images/michelle.jpg',
+      bio:   'With 20 years of experience in the legal industry, including 13 years specializing in eDiscovery, Michelle brings a wealth of expertise to her dual role as CFO & COO. A Certified eDiscovery Specialist, she has worked both in private practice at a top-tier law firm and in-house as an eDiscovery lead, giving her a comprehensive understanding of the legal and operational aspects of discovery management.\n\nMichelle\'s background includes overseeing eDiscovery budgets, optimizing processes, and managing cross-functional teams that deliver technical and strategic support.\n\nHer career is defined by a commitment to operational excellence, innovation, and collaboration, ensuring that both client and organizational objectives are met with precision and efficiency.'
     },
-    member3: {
-      name:  '[Team Member Name]',
-      role:  '[Title / Role]',
-      bio:   '[Add this person\'s bio here.]',
-      photo: null
+    jessica: {
+      name:  'Jessica Morra',
+      role:  'Administrative Coordinator',
+      photo: 'images/Jessica.png',
+      bio:   'After a decade in the fast-paced automotive industry, Jessica transitioned into eDiscovery, bringing with her proven strengths in client experience, workflow management, and clear communication.\n\nWhile new to eDiscovery, Jessica is highly detail-oriented, quick to learn, and dedicated to supporting the team with precision and professionalism.\n\nWith a strong foundation in client communication, problem-solving, and detail-driven work, Jessica is looking forward to building a career in eDiscovery, where organization, accuracy, and trust are critical.'
     }
   };
 
