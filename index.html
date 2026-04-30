@@ -70,11 +70,12 @@
     .hero-scroll {
       position: absolute;
       bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
       opacity: 0.45;
       animation: heroFade 1s 1s ease forwards;
@@ -465,6 +466,351 @@
 <!-- ═══════════════ FOOTER ════════════════ -->
 <div id="site-footer"></div>
 
+<!-- ═══════════════ NEWSLETTER POPUP ════ -->
+<div class="nl-overlay" id="nlOverlay">
+  <div class="nl-modal" id="nlModal">
+
+    <button class="nl-close" id="nlClose" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <line x1="1" y1="1" x2="13" y2="13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="13" y1="1" x2="1" y2="13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Left side — brand -->
+    <div class="nl-left">
+      <img src="images/logo.jpg" alt="Astrea eDiscovery" class="nl-logo">
+      <h2 class="nl-heading">Stay in the loop.</h2>
+      <p class="nl-sub">eDiscovery insights, platform updates, and industry news — straight to your inbox.</p>
+      <ul class="nl-perks">
+        <li>✦ No spam, ever</li>
+        <li>✦ Unsubscribe anytime</li>
+        <li>✦ Join our tribe</li>
+      </ul>
+    </div>
+
+    <!-- Right side — form -->
+    <div class="nl-right">
+      <div class="nl-eyebrow">Newsletter</div>
+      <p class="nl-right-sub">Be the first to know what we're up to.</p>
+
+      <div class="nl-input-wrap">
+        <input type="text" id="nlName" placeholder="Your name" class="nl-input">
+      </div>
+      <div class="nl-input-wrap">
+        <input type="email" id="nlEmail" placeholder="Email address" class="nl-input">
+      </div>
+
+      <button class="nl-btn" id="nlSubmit">Subscribe →</button>
+
+      <div class="nl-success" id="nlSuccess">
+        <div class="nl-success-icon">🎉</div>
+        <div class="nl-success-text">You're in! Welcome to the tribe.</div>
+      </div>
+
+      <button class="nl-skip" id="nlSkip">No thanks, maybe later</button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* ── Newsletter Popup ───────────────────── */
+  .nl-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.55);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  .nl-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nl-modal {
+    background: white;
+    border-radius: 28px;
+    max-width: 820px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    position: relative;
+    transform: scale(0.88) translateY(24px);
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.18);
+  }
+
+  .nl-overlay.open .nl-modal {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Close button */
+  .nl-close {
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    width: 32px;
+    height: 32px;
+    background: rgba(0,0,0,0.08);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #555;
+    z-index: 10;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .nl-close:hover {
+    background: rgba(0,0,0,0.15);
+    transform: rotate(90deg);
+  }
+
+  /* Left panel */
+  .nl-left {
+    background: var(--pink);
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .nl-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    object-fit: cover;
+    margin-bottom: 1.75rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+
+  .nl-heading {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 0.85rem;
+    color: var(--dark);
+  }
+
+  .nl-sub {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(26,26,26,0.7);
+    margin-bottom: 1.75rem;
+  }
+
+  .nl-perks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nl-perks li {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(26,26,26,0.6);
+    letter-spacing: 0.02em;
+  }
+
+  /* Right panel */
+  .nl-right {
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+  }
+
+  .nl-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(26,26,26,0.35);
+    margin-bottom: 0.5rem;
+  }
+
+  .nl-right-sub {
+    font-size: 0.88rem;
+    color: rgba(26,26,26,0.55);
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+  }
+
+  .nl-input-wrap {
+    margin-bottom: 0.75rem;
+  }
+
+  .nl-input {
+    width: 100%;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--dark);
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fafafa;
+  }
+
+  .nl-input:focus {
+    border-color: var(--pink-dark);
+    background: white;
+  }
+
+  .nl-btn {
+    width: 100%;
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .nl-btn:hover {
+    background: #333;
+    transform: translateY(-1px);
+  }
+
+  /* Success state */
+  .nl-success {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem 0;
+    gap: 0.5rem;
+  }
+
+  .nl-success-icon { font-size: 2.5rem; }
+
+  .nl-success-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  .nl-skip {
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: rgba(26,26,26,0.35);
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    padding: 0.25rem;
+    transition: color 0.2s;
+  }
+
+  .nl-skip:hover { color: rgba(26,26,26,0.65); }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .nl-modal {
+      grid-template-columns: 1fr;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 20px;
+    }
+    .nl-left { padding: 2rem 1.75rem 1.5rem; }
+    .nl-right { padding: 1.5rem 1.75rem 2rem; }
+    .nl-heading { font-size: 1.6rem; }
+  }
+</style>
+
 <script src="js/components.js"></script>
+<script>
+  // Show popup once per session — after 3 seconds
+  (function () {
+    var STORAGE_KEY = 'astrea_nl_dismissed';
+
+    // Don't show if already dismissed this session
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+
+    var overlay = document.getElementById('nlOverlay');
+    var closeBtn = document.getElementById('nlClose');
+    var skipBtn  = document.getElementById('nlSkip');
+    var submitBtn = document.getElementById('nlSubmit');
+    var success  = document.getElementById('nlSuccess');
+    var emailInput = document.getElementById('nlEmail');
+    var nameInput  = document.getElementById('nlName');
+
+    function openPopup() {
+      overlay.classList.add('open');
+    }
+
+    function closePopup() {
+      overlay.classList.remove('open');
+      sessionStorage.setItem(STORAGE_KEY, '1');
+    }
+
+    // Open after 3 seconds
+    setTimeout(openPopup, 3000);
+
+    // Close on X button
+    closeBtn.addEventListener('click', closePopup);
+
+    // Close on skip
+    skipBtn.addEventListener('click', closePopup);
+
+    // Close on backdrop click
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closePopup();
+    });
+
+    // Close on ESC
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closePopup();
+    });
+
+    // Submit
+    submitBtn.addEventListener('click', function () {
+      var email = emailInput.value.trim();
+      if (!email || !email.includes('@')) {
+        emailInput.style.borderColor = '#ff6b6b';
+        emailInput.focus();
+        setTimeout(function () {
+          emailInput.style.borderColor = '';
+        }, 2000);
+        return;
+      }
+
+      // Show success
+      nameInput.style.display  = 'none';
+      emailInput.style.display = 'none';
+      submitBtn.style.display  = 'none';
+      skipBtn.style.display    = 'none';
+      document.querySelector('.nl-eyebrow').style.display   = 'none';
+      document.querySelector('.nl-right-sub').style.display = 'none';
+      success.style.display = 'flex';
+
+      // Auto-close after 2.5s
+      setTimeout(closePopup, 2500);
+    });
+
+  })();
+</script>
 </body>
 </html>
