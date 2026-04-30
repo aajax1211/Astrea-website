@@ -1,14 +1,26 @@
 /* =============================================
    ASTREA eDISCOVERY — COMPONENT LOADER
-   Fetches header.html + footer.html and injects
-   them into every page automatically.
+   Works on both localhost and GitHub Pages
    ============================================= */
+
+// Detect base path automatically (works on localhost AND GitHub Pages subfolders)
+function getBasePath() {
+  const scripts = document.querySelectorAll('script[src]');
+  for (const s of scripts) {
+    if (s.src.includes('components.js')) {
+      return s.src.replace('js/components.js', '');
+    }
+  }
+  return '/';
+}
+
+const BASE = getBasePath();
 
 async function loadComponent(id, path) {
   const el = document.getElementById(id);
   if (!el) return;
   try {
-    const res = await fetch(path);
+    const res = await fetch(BASE + path);
     if (!res.ok) throw new Error(`Failed to load ${path}`);
     el.innerHTML = await res.text();
   } catch (err) {
@@ -22,7 +34,7 @@ async function initComponents() {
     loadComponent('site-footer', 'components/footer.html'),
   ]);
 
-  // ── Set active nav link based on current page ──
+  // ── Set active nav link ──
   const page = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-links a').forEach(a => {
     const href = a.getAttribute('href');
@@ -59,7 +71,6 @@ async function initComponents() {
       if (!ticking) {
         requestAnimationFrame(() => {
           const current = window.scrollY;
-          // Hide when scrolling DOWN past 80px, show when scrolling UP
           if (current > lastScroll && current > 80) {
             navWrapper.classList.add('nav-hidden');
           } else {
@@ -73,12 +84,11 @@ async function initComponents() {
     });
   }
 
-  // ── Newsletter form handler ──
+  // ── Newsletter form ──
   document.querySelectorAll('.footer-form').forEach(form => {
     const btn   = form.querySelector('button');
     const input = form.querySelector('input');
     if (!btn || !input) return;
-
     btn.addEventListener('click', () => {
       const email = input.value.trim();
       if (!email || !email.includes('@')) {
@@ -98,7 +108,6 @@ async function initComponents() {
     });
   });
 
-  // ── Scroll reveal (re-init after components load) ──
   initReveal();
 }
 
@@ -115,7 +124,6 @@ function initReveal() {
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
-// ── Run on DOM ready ──
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initComponents);
 } else {
